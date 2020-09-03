@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAN_LX_Dejan_Prodanovic.Dto
 {
-    class EmployeeDto
+    public class EmployeeDto
     {
         public int EmployeeID { get; set; }
         public string FirstName { get; set; }

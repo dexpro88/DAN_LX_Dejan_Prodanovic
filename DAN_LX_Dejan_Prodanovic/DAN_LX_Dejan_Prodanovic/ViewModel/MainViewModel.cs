@@ -160,6 +160,51 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 return true;
             }
         }
+
+        private ICommand editEmployee;
+        public ICommand EditEmployee
+        {
+            get
+            {
+                if (editEmployee == null)
+                {
+                    editEmployee = new RelayCommand(param => EditEmployeeExecute(),
+                        param => CanEditEmployeeExecute());
+                }
+                return editEmployee;
+            }
+        }
+
+        private void EditEmployeeExecute()
+        {
+            try
+            {
+
+
+                EditEmployee editEmployee = new EditEmployee(SelectedEmployee);
+                editEmployee.ShowDialog();
+
+               
+                employees = employeeService.GetEmployees();
+
+                EmployeeList = ConvertToListEmployeeDto(employees);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        private bool CanEditEmployeeExecute()
+        {
+            if (SelectedEmployee == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
         private ICommand addEmployee;
         public ICommand AddEmployee
         {
@@ -244,11 +289,14 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
 
 
 
-             
-            tblEmployee manager = employeeService.GetEmployeeByJMBG(employee.JMBG);
+            if (employee.ManagerId != null)
+            {
+                tblEmployee manager = employeeService.GetEmployeeByID((int)employee.ManagerId);
 
-            employeeDto.ManagerName = string.Format("{0} {1} {2}",manager.FirstName,manager.LastName,
-                manager.JMBG);
+                employeeDto.ManagerName = string.Format("{0} {1} {2}", manager.FirstName, manager.LastName,
+                    manager.JMBG);
+            }
+          
 
             return employeeDto;
              

@@ -14,48 +14,72 @@ using System.Windows.Input;
 
 namespace DAN_LX_Dejan_Prodanovic.ViewModel
 {
-    class AddEmployeeViewModel : ViewModelBase
+    class EditEmployeeViewModel:ViewModelBase
     {
-        AddEmployee addEmployee;
+        EditEmployee editEmployee;
         ILocationService locationService;
         IEmployeeService employeeService;
-
+       
         ISectorService sectorService;
         //EventClass eventObject;
-        List<tblLocation> locationsInDb;
-        List<tblEmployee> managersInDb;
+        List<tblLocation> locations = new List<tblLocation>();
+        List<tblEmployee> potentialManagersInDb = new List<tblEmployee>();
+        private EmployeeDto oldEmployee;
 
         #region Constructor
-        public AddEmployeeViewModel(AddEmployee addEmployeeOpen)
+        public EditEmployeeViewModel(EditEmployee editEmployeeOpen, EmployeeDto employeeEdit)
         {
             //eventObject = new EventClass();
+            editEmployee = editEmployeeOpen;
+            //ManagerDto = new EmployeeDto();
+            Employee = employeeEdit;
 
-            SelectedMenager = new ManagerDto();
-            
-
-            employee = new tblEmployee();
-            addEmployee = addEmployeeOpen;
+            selctedLocation = new LocationDto();
+            //selectedMenager = new vwMenager();
+            //selectedMenager.Menager = employee.MenagerName;
+            StartDate = (DateTime)employee.DateOfBirth;
+            Sector = employee.SectorName;
 
             locationService = new LocationService();
             employeeService = new EmployeeService();
-
+           
             sectorService = new SectorService();
 
-            locationsInDb = locationService.GetAllLocations().ToList();
+            potentialManagersInDb = employeeService.GetAllPotentialMenagers();
+            PotentialMenagers = ConvertManagerListToDto(potentialManagersInDb);
+            PotentialMenagers = PotentialMenagers.Where(x => x.ID != Employee.EmployeeID).ToList();
 
-            LocationList = ConvertLocationDtoList(locationsInDb);
-            selctedLocation = LocationList.FirstOrDefault();
+            locations = locationService.GetAllLocations().ToList();
+
+            tblLocation locataionForPresent = locationService.GetLocationByID((int)Employee.LocationID);
+
+            tblEmployee managerToPresent = null;
+            if (Employee.ManagerId!=null)
+            {
+                managerToPresent = employeeService.GetEmployeeByID((int)Employee.ManagerId);
+            }
+          
+            LocationList = ConvertLocationDtoList(locations);
+           
+            SelctedLocation = LocationList.Where(x=>x.ID==locataionForPresent.LocationID).FirstOrDefault();
             LocationList.OrderByDescending(x => x.Location);
             LocationList.Reverse();
 
+            if (managerToPresent!=null)
+            {
+                SelectedMenager = PotentialMenagers.Where(x=>x.ID==Employee.ManagerId).FirstOrDefault();
+            }
 
+          
 
-            managersInDb = employeeService.GetAllPotentialMenagers();
-
-            PotentialMenagers = ConvertManagerListToDto(managersInDb);
-
+           
 
             //eventObject.ActionPerformed += ActionPerformed;
+
+            oldEmployee = new EmployeeDto();
+            oldEmployee.FirstName = employee.FirstName;
+            oldEmployee.LastName = employee.LastName;
+            oldEmployee.JMBG = employee.JMBG;
         }
 
 
@@ -76,8 +100,8 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             }
         }
 
-        private tblEmployee employee;
-        public tblEmployee Employee
+        private EmployeeDto employee;
+        public EmployeeDto Employee
         {
             get
             {
@@ -89,6 +113,9 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 OnPropertyChanged("Employee");
             }
         }
+
+      
+
 
         private ManagerDto selectedMenager;
         public ManagerDto SelectedMenager
@@ -167,7 +194,18 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         }
 
 
-       
+        private bool isUpdateUser;
+        public bool IsUpdateUser
+        {
+            get
+            {
+                return isUpdateUser;
+            }
+            set
+            {
+                isUpdateUser = value;
+            }
+        }
         #endregion
 
         #region Commands
@@ -196,35 +234,30 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 //    return;
                 //}
 
-                //if (!ValidationClass.JMBGIsUnique(employee.JMBG))
-                //{
-                //    MessageBox.Show("JMBG  already exists in database");
-                //    return;
-                //}
+
 
                 //if (!ValidationClass.RegisterNumberIsValid(employee.IDNumber))
                 //{
-                //    MessageBox.Show("Registration number  is not valid. It must have 9 numbers");
+                //    MessageBox.Show("Registration number  is not valid");
                 //    return;
                 //}
-                //if (!ValidationClass.RegNumberIsUnique(employee.IDNumber))
-                //{
-                //    MessageBox.Show("Registration number  already exists in database");
-                //    return;
-                //}
+
                 //if (!ValidationClass.TelfonNumberValid(employee.PhoneNumber))
                 //{
-                //    MessageBox.Show("Telephone number  is not valid. It must have 9 numbers");
+                //    MessageBox.Show("Telefon number  is not valid. It must have 9 numbers");
                 //    return;
                 //}
-                employee.LocationID = SelctedLocation.ID;
+
+
                 employee.DateOfBirth = StartDate;
+                Employee.LocationID = SelctedLocation.ID;
 
-                 
-                employee.ManagerId = SelectedMenager.ID;
-              
+                if (SelectedMenager!=null)
+                {
+                    employee.ManagerId = SelectedMenager.ID;
 
-
+                }
+               
 
                 if (Gender.Equals("male"))
                 {
@@ -240,15 +273,10 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 }
 
 
-                tblSector sectorDB = sectorService.GetSectorByName(Sector);             
+                tblSector sectorDB = sectorService.GetSectorByName(Sector);
+ 
 
-                //string textForFile = String.Format("Added user {0} {1} JMBG {2}", employee.FirstName,
-                //              employee.LastName, employee.JMBG);
-                //eventObject.OnActionPerformed(textForFile);
-
-
-
-                tblEmployee emplInDb = employeeService.AddEmployee(employee);
+                employeeService.EditEmployee(Employee);
 
                 if (sectorDB == null)
                 {
@@ -256,18 +284,30 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                     sectorDB = new tblSector();
                     sectorDB.SectorName = Sector;
                     sectorDB = sectorService.AddSector(sectorDB);
-                    //employee.SectorID = sectorDB.SectorID;
-                    employeeService.EditSector(emplInDb.EmployeeID, sectorDB);
+                    
+                    employeeService.EditSector(Employee.EmployeeID, sectorDB);
 
                 }
                 else
                 {
-                    
-                    employeeService.EditSector(emplInDb.EmployeeID, sectorDB);
-                }
-                employeeService.EditManager(emplInDb.EmployeeID, SelectedMenager.ID);
 
-                addEmployee.Close();
+                    employeeService.EditSector(Employee.EmployeeID, sectorDB);
+                }
+                if (Employee.ManagerId!=null)
+                {
+                    employeeService.EditManager((int)Employee.EmployeeID, SelectedMenager.ID);
+                }
+               
+               
+
+                //string textForFile = String.Format("Updated user {0} {1} JMBG {2} to {3} {4} JMBG {5}", oldEmployee.FirstName,
+                //              oldEmployee.LastName, oldEmployee.JMBG, employee.FirstName, employee.LastName, employee.JMBG);
+                //eventObject.OnActionPerformed(textForFile);
+
+
+                //employeeService.EditEmployee(employee);
+
+                editEmployee.Close();
 
             }
             catch (Exception ex)
@@ -281,8 +321,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
 
             if (String.IsNullOrEmpty(Employee.FirstName) || String.IsNullOrEmpty(Employee.FirstName) ||
                 String.IsNullOrEmpty(Employee.JMBG) || String.IsNullOrEmpty(Employee.IDNumber) ||
-                String.IsNullOrEmpty(Employee.PhoneNumber) || String.IsNullOrEmpty(SelctedLocation.Location) 
-                ||
+                String.IsNullOrEmpty(Employee.PhoneNumber) || String.IsNullOrEmpty(SelctedLocation.Location) ||
                 String.IsNullOrEmpty(Sector)
                )
             {
@@ -292,7 +331,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             {
                 return true;
             }
-          
+            //return true;
         }
 
         private ICommand close;
@@ -312,7 +351,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         {
             try
             {
-                addEmployee.Close();
+                editEmployee.Close();
             }
             catch (Exception ex)
             {
@@ -355,9 +394,15 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 return false;
             }
         }
+
         #endregion
 
-        List<LocationDto> ConvertLocationDtoList(List<tblLocation>locations)
+        //void ActionPerformed(object source, TextToFileEventArgs args)
+        //{
+        //    FileLogging.texToFile = args.TextForFile;
+        //}
+
+        List<LocationDto> ConvertLocationDtoList(List<tblLocation> locations)
         {
             List<LocationDto> locationDtos = new List<LocationDto>();
             foreach (var loc in locations)
@@ -371,15 +416,15 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         {
 
             LocationDto locationDto = new LocationDto();
-            locationDto.Location = string.Format("{0} {1} {2} {3}",location.Street,location.Number,
-                location.City,location.Country);
+            locationDto.Location = string.Format("{0} {1} {2} {3}", location.Street, location.Number,
+                location.City, location.Country);
             locationDto.ID = location.LocationID;
 
             return locationDto;
-      
+
         }
 
-        List<ManagerDto> ConvertManagerListToDto(List<tblEmployee>managers)
+        List<ManagerDto> ConvertManagerListToDto(List<tblEmployee> managers)
         {
             List<ManagerDto> managerDtos = new List<ManagerDto>();
             foreach (var item in managers)
@@ -392,7 +437,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         ManagerDto ConvertToManagerDto(tblEmployee manager)
         {
             ManagerDto managerDto = new ManagerDto();
-            managerDto.ManagerData = string.Format("{0} {1} {2}",manager.FirstName,manager.LastName,
+            managerDto.ManagerData = string.Format("{0} {1} {2}", manager.FirstName, manager.LastName,
                 manager.JMBG);
             managerDto.ID = manager.EmployeeID;
 
@@ -400,4 +445,3 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         }
     }
 }
- 

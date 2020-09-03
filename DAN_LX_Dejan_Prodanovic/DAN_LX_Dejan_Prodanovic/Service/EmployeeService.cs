@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using DAN_LX_Dejan_Prodanovic.Dto;
 using DAN_LX_Dejan_Prodanovic.Model;
 
 namespace DAN_LX_Dejan_Prodanovic.Service
@@ -73,7 +74,7 @@ namespace DAN_LX_Dejan_Prodanovic.Service
             }
         }
 
-        public tblEmployee EditManager(tblEmployee employee, int managerId)
+        public void EditEmployee(EmployeeDto employee)
         {
             try
             {
@@ -84,17 +85,44 @@ namespace DAN_LX_Dejan_Prodanovic.Service
                                                 where e.EmployeeID == employee.EmployeeID
                                                 select e).First();
 
-                    
+                    emoloyeeInDB.FirstName = employee.FirstName;
+                    emoloyeeInDB.LastName = employee.LastName;
+                    emoloyeeInDB.JMBG = employee.JMBG;
+                    emoloyeeInDB.IDNumber = employee.IDNumber;
+                    emoloyeeInDB.PhoneNumber = employee.PhoneNumber;
+                    emoloyeeInDB.LocationID = employee.LocationID;
+                    emoloyeeInDB.DateOfBirth = employee.DateOfBirth;
 
+                    emoloyeeInDB.Gender = employee.Gender;
+
+                    context.SaveChanges();
+
+                     
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception" + ex.Message.ToString());
+                
+            }
+        }
+
+        public tblEmployee EditManager(int employeeID, int managerId)
+        {
+            try
+            {
+                using (EmployeeDbEntities1 context = new EmployeeDbEntities1())
+                {
+
+                    tblEmployee emoloyeeInDB = (from e in context.tblEmployees
+                                                where e.EmployeeID == employeeID
+                                                select e).First();
 
                     emoloyeeInDB.ManagerId = managerId;
 
                     context.SaveChanges();
 
-
-                    return employee;
-
-
+                    return emoloyeeInDB;
                 }
             }
             catch (Exception ex)
@@ -104,7 +132,7 @@ namespace DAN_LX_Dejan_Prodanovic.Service
             }
         }
 
-        public tblEmployee EditSector(tblEmployee employee,tblSector sector)
+        public tblEmployee EditSector(int employeeID, tblSector sector)
         {
             try
             {
@@ -112,7 +140,7 @@ namespace DAN_LX_Dejan_Prodanovic.Service
                 {
  
                     tblEmployee emoloyeeInDB = (from e in context.tblEmployees
-                                            where e.EmployeeID == employee.EmployeeID
+                                            where e.EmployeeID == employeeID
                                             select e).First();
 
                     tblSector sectorInDb = (from e in context.tblSectors
@@ -125,7 +153,7 @@ namespace DAN_LX_Dejan_Prodanovic.Service
                     context.SaveChanges();
 
                     
-                    return employee;
+                    return emoloyeeInDB;
 
 
                 }
@@ -169,6 +197,28 @@ namespace DAN_LX_Dejan_Prodanovic.Service
                     list = (from x in context.tblEmployees where 
                              x.EmployeeID != employee.EmployeeID select x).ToList();
                     return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception" + ex.Message.ToString());
+                return null;
+            }
+        }
+
+        public tblEmployee GetEmployeeByID(int ID)
+        {
+            try
+            {
+                using (EmployeeDbEntities1 context = new EmployeeDbEntities1())
+                {
+                    tblEmployee emoloyee = (from e in context.tblEmployees
+                                            where e.EmployeeID == ID
+                                            select e).First();
+
+                    return emoloyee;
+
+
                 }
             }
             catch (Exception ex)
