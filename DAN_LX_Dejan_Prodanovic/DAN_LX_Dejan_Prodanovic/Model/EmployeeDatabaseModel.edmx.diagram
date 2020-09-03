@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e986c8e2d887401b95af169eb6917ec8" Name="Diagram1">
+        <EntityTypeShape EntityType="EmployeeDbModel.tblEmployee" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDbModel.tblLocation" Width="1.5" PointX="0.75" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeDbModel.tblSector" Width="1.5" PointX="0.75" PointY="6.125" IsExpanded="true" />
+        <AssociationConnector Association="EmployeeDbModel.FK__tblEmploy__Locat__3D5E1FD2" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeeDbModel.FK__tblEmploy__Manag__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeeDbModel.FK__tblEmploy__Secto__3C69FB99" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

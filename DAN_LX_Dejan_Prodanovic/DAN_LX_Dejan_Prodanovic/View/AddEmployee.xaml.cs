@@ -11,20 +11,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DAN_LX_Dejan_Prodanovic
+namespace DAN_LX_Dejan_Prodanovic.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AddEmployee.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AddEmployee : Window
     {
-        public MainWindow()
+        public AddEmployee()
         {
             InitializeComponent();
-            DataContext = new MainViewModel(this);
+            DataContext = new AddEmployeeViewModel(this);
         }
     }
 }

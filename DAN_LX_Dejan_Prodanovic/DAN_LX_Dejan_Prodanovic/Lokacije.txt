@@ -1,0 +1,7 @@
+Bulevar Oslobodjenja,30,Novi Sad,Serbia
+Cara Dusana,34,Novi Sad,Serbia
+Lazara Nancica,17,Novi Sad,Serbia
+Mornarska,44,Novi Sad,Serbia
+Maksima Gorkog,45,Novi Sad,Serbia
+Branka Radicevica,60,Novi Sad,Serbia
+Branka Copica,90,Novi Sad,Serbia

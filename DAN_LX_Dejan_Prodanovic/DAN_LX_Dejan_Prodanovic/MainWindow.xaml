@@ -5,8 +5,80 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DAN_LX_Dejan_Prodanovic"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Height="600"
+        Width="900"
+        Background="LightBlue">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin"
+                    Value="0,0,10,0" />
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="Padding"
+                    Value="10,0,10,0" />
+            <Setter Property="Background"
+                    Value="#545d6a" />
+            <Setter Property="Width"
+                    Value="100" />
+            <Setter Property="Height"
+                    Value="30" />
+            <Setter Property="Foreground"
+                    Value="White" />
+        </Style>
+    </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    Orientation="Horizontal">
+            <Label FontSize="18"
+                   Content="Employees: "
+                   VerticalAlignment="Center"
+                   Foreground="Black" />
+        </StackPanel>
+        <DataGrid Grid.Row="1"
+                  Name="DataGridResults"
+                  ItemsSource="{Binding FriendList, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding SelectedUser,UpdateSourceTrigger=PropertyChanged}"
+                  IsReadOnly="True"
+                  HeadersVisibility="Column"
+                  AutoGenerateColumns="False"
+                  HorizontalGridLinesBrush="Black"
+                  BorderBrush="Black"
+                  Foreground="Black"
+                  FontWeight="Bold">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="First name"
+                                    Binding="{Binding FirstName}" />
+                <DataGridTextColumn Header="Last name"
+                                    Binding="{Binding LastName}" />
+                <DataGridTextColumn Header="Gender"
+                                    Binding="{Binding Gender}" />
+                <DataGridTextColumn Header="Location"
+                                    Binding="{Binding Location}" />
+                <DataGridTextColumn Header="Email"
+                                    Binding="{Binding Email}" />
+                <DataGridTextColumn Header="Username"
+                                    Binding="{Binding Username}" />
+                <DataGridTextColumn Header="DateOfBirth"
+                                    Binding="{Binding DateOfBirth, StringFormat='{}{0:dd/MM/yyyy}'}" />
+            </DataGrid.Columns>
+        </DataGrid>
         
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0 0 0 10">
+            <Button Command="{Binding AddEmployee}"
+                    Content="Add Employee" />
+            <Button Command="{Binding Close}"
+                    Content="Close" />
+        </StackPanel>
     </Grid>
 </Window>
