@@ -31,7 +31,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             //eventObject = new EventClass();
 
             SelectedMenager = new ManagerDto();
-            MessageBox.Show(SelectedMenager.ID.ToString());
+            
 
             employee = new tblEmployee();
             addEmployee = addEmployeeOpen;
@@ -190,45 +190,37 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             try
             {
 
-                if (!ValidationClass.JMBGisValid(employee.JMBG))
-                {
-                    MessageBox.Show("JMBG  is not valid.");
-                    return;
-                }
+                //if (!ValidationClass.JMBGisValid(employee.JMBG))
+                //{
+                //    MessageBox.Show("JMBG  is not valid.");
+                //    return;
+                //}
 
-                if (!ValidationClass.JMBGIsUnique(employee.JMBG))
-                {
-                    MessageBox.Show("JMBG  already exists in database");
-                    return;
-                }
+                //if (!ValidationClass.JMBGIsUnique(employee.JMBG))
+                //{
+                //    MessageBox.Show("JMBG  already exists in database");
+                //    return;
+                //}
 
-                if (!ValidationClass.RegisterNumberIsValid(employee.IDNumber))
-                {
-                    MessageBox.Show("Registration number  is not valid. It must have 9 numbers");
-                    return;
-                }
-                if (!ValidationClass.RegNumberIsUnique(employee.IDNumber))
-                {
-                    MessageBox.Show("Registration number  already exists in database");
-                    return;
-                }
-                if (!ValidationClass.TelfonNumberValid(employee.PhoneNumber))
-                {
-                    MessageBox.Show("Telephone number  is not valid. It must have 9 numbers");
-                    return;
-                }
+                //if (!ValidationClass.RegisterNumberIsValid(employee.IDNumber))
+                //{
+                //    MessageBox.Show("Registration number  is not valid. It must have 9 numbers");
+                //    return;
+                //}
+                //if (!ValidationClass.RegNumberIsUnique(employee.IDNumber))
+                //{
+                //    MessageBox.Show("Registration number  already exists in database");
+                //    return;
+                //}
+                //if (!ValidationClass.TelfonNumberValid(employee.PhoneNumber))
+                //{
+                //    MessageBox.Show("Telephone number  is not valid. It must have 9 numbers");
+                //    return;
+                //}
                 employee.LocationID = SelctedLocation.ID;
                 employee.DateOfBirth = StartDate;
 
-                //if (String.IsNullOrEmpty(selectedMenager.Menager))
-                //{
-
-                //    employee.MenagerID = menagerDB.EmployeeID;
-                //}
-                //else
-                //{
-                //    employee.MenagerID = selectedMenager.EmployeeID;
-                //}
+                 
                 employee.ManagerId = SelectedMenager.ID;
               
 
@@ -248,22 +240,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 }
 
 
-                tblSector sectorDB = sectorService.GetSectorByName(Sector);
-
-                if (sectorDB == null)
-                {
-
-                    sectorDB = new tblSector();
-                    sectorDB.SectorName = Sector;
-                    sectorDB = sectorService.AddSector(sectorDB);
-                    employee.SectorID = sectorDB.SectorID;
-
-                }
-                else
-                {
-                    employee.SectorID = sectorDB.SectorID;
-
-                }
+                tblSector sectorDB = sectorService.GetSectorByName(Sector);             
 
                 //string textForFile = String.Format("Added user {0} {1} JMBG {2}", employee.FirstName,
                 //              employee.LastName, employee.JMBG);
@@ -271,10 +248,24 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
 
 
 
+                tblEmployee emplInDb = employeeService.AddEmployee(employee);
 
+                if (sectorDB == null)
+                {
 
+                    sectorDB = new tblSector();
+                    sectorDB.SectorName = Sector;
+                    sectorDB = sectorService.AddSector(sectorDB);
+                    //employee.SectorID = sectorDB.SectorID;
+                    employeeService.EditSector(emplInDb, sectorDB);
 
-                employeeService.AddEmployee(employee);
+                }
+                else
+                {
+                    
+                    employeeService.EditSector(emplInDb, sectorDB);
+                }
+                employeeService.EditManager(emplInDb, SelectedMenager.ID);
 
                 addEmployee.Close();
 
@@ -288,19 +279,20 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         private bool CanSaveExecute()
         {
 
-            //if (String.IsNullOrEmpty(Employee.FirstName) || String.IsNullOrEmpty(Employee.FirstName) ||
-            //    String.IsNullOrEmpty(Employee.JMBG) || String.IsNullOrEmpty(Employee.RegistrationNumber) ||
-            //    String.IsNullOrEmpty(Employee.TelefonNumber) || String.IsNullOrEmpty(SelctedLocation.Location) ||
-            //    String.IsNullOrEmpty(Sector)
-            //   )
-            //{
-            //    return false;
-            //}
-            //else
-            //{
-            return true;
-            //}
-            //return true;
+            if (String.IsNullOrEmpty(Employee.FirstName) || String.IsNullOrEmpty(Employee.FirstName) ||
+                String.IsNullOrEmpty(Employee.JMBG) || String.IsNullOrEmpty(Employee.IDNumber) ||
+                String.IsNullOrEmpty(Employee.PhoneNumber) || String.IsNullOrEmpty(SelctedLocation.Location) 
+                ||
+                String.IsNullOrEmpty(Sector)
+               )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+          
         }
 
         private ICommand close;

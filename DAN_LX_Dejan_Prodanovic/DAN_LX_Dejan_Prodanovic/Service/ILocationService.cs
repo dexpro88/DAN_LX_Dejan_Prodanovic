@@ -9,6 +9,7 @@ namespace DAN_LX_Dejan_Prodanovic.Service
 {
     interface ILocationService
     {
+        tblLocation GetLocationByID(int id);
         tblLocation AddLocation(tblLocation location);
         List<tblLocation> GetAllLocations();
     }

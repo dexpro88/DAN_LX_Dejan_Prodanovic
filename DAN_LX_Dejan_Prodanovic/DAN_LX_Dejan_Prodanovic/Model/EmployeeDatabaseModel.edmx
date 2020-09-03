@@ -171,7 +171,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="EmployeeDbEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="EmployeeDbEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tblEmployees" EntityType="Self.tblEmployee" />
           <EntitySet Name="tblLocations" EntityType="Self.tblLocation" />
           <EntitySet Name="tblSectors" EntityType="Self.tblSector" />
@@ -193,7 +193,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="EmployeeDbModelStoreContainer" CdmEntityContainer="EmployeeDbEntities">
+        <EntityContainerMapping StorageEntityContainer="EmployeeDbModelStoreContainer" CdmEntityContainer="EmployeeDbEntities1">
           <EntitySetMapping Name="tblEmployees">
             <EntityTypeMapping TypeName="EmployeeDbModel.tblEmployee">
               <MappingFragment StoreEntitySet="tblEmployee">

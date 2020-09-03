@@ -13,7 +13,7 @@ namespace DAN_LX_Dejan_Prodanovic.Service
         {
             try
             {
-                using (EmployeeDbEntities context = new EmployeeDbEntities())
+                using (EmployeeDbEntities1 context = new EmployeeDbEntities1())
                 {
 
                     tblLocation newLocation = new tblLocation();
@@ -44,11 +44,33 @@ namespace DAN_LX_Dejan_Prodanovic.Service
         {
             try
             {
-                using (EmployeeDbEntities context = new EmployeeDbEntities())
+                using (EmployeeDbEntities1 context = new EmployeeDbEntities1())
                 {
                     List<tblLocation> list = new List<tblLocation>();
                     list = (from x in context.tblLocations select x).ToList();
                     return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception" + ex.Message.ToString());
+                return null;
+            }
+        }
+
+        public tblLocation GetLocationByID(int id)
+        {
+            try
+            {
+                using (EmployeeDbEntities1 context = new EmployeeDbEntities1())
+                {
+                    tblLocation locationInDb = (from s in context.tblLocations
+                                              where s.LocationID == id
+                                              select s).First();
+
+
+                    return locationInDb;
+
                 }
             }
             catch (Exception ex)

@@ -13,10 +13,10 @@ namespace DAN_LX_Dejan_Prodanovic.Model
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class EmployeeDbEntities : DbContext
+    public partial class EmployeeDbEntities1 : DbContext
     {
-        public EmployeeDbEntities()
-            : base("name=EmployeeDbEntities")
+        public EmployeeDbEntities1()
+            : base("name=EmployeeDbEntities1")
         {
         }
     

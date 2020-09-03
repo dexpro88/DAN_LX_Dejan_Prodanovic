@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow"
         Height="600"
-        Width="900"
+        Width="1200"
         Background="LightBlue">
     <Window.Resources>
         <Style TargetType="Button">
@@ -44,8 +44,8 @@
         </StackPanel>
         <DataGrid Grid.Row="1"
                   Name="DataGridResults"
-                  ItemsSource="{Binding FriendList, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding SelectedUser,UpdateSourceTrigger=PropertyChanged}"
+                  ItemsSource="{Binding EmployeeList, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding SelectedEmployee,UpdateSourceTrigger=PropertyChanged}"
                   IsReadOnly="True"
                   HeadersVisibility="Column"
                   AutoGenerateColumns="False"
@@ -60,18 +60,46 @@
                                     Binding="{Binding LastName}" />
                 <DataGridTextColumn Header="Gender"
                                     Binding="{Binding Gender}" />
-                <DataGridTextColumn Header="Location"
-                                    Binding="{Binding Location}" />
-                <DataGridTextColumn Header="Email"
-                                    Binding="{Binding Email}" />
-                <DataGridTextColumn Header="Username"
-                                    Binding="{Binding Username}" />
+                <DataGridTextColumn Header="JMBG"
+                                    Binding="{Binding JMBG}" />
+                <DataGridTextColumn Header="ID card number"
+                                    Binding="{Binding IDNumber}" />
+                <DataGridTextColumn Header="Phone Number"
+                                    Binding="{Binding PhoneNumber}" />
                 <DataGridTextColumn Header="DateOfBirth"
                                     Binding="{Binding DateOfBirth, StringFormat='{}{0:dd/MM/yyyy}'}" />
+                <DataGridTextColumn Header="Location"
+                                    Binding="{Binding LocationName}" />
+                <DataGridTextColumn Header="Sector"
+                                    Binding="{Binding SectorName}" />
+                <DataGridTextColumn Header="Manager"
+                                    Binding="{Binding ManagerName}" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Width="80"
+                                    Height="20"
+                                    Command="{Binding Path=DataContext.DeleteEmployee, RelativeSource= {RelativeSource FindAncestor,
+                                       AncestorType={x:Type DataGrid}},UpdateSourceTrigger=PropertyChanged}"
+                                    Content="Edit" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Width="80"
+                                    Height="20"
+                                    Command="{Binding Path=DataContext.DeleteEmployee, RelativeSource= {RelativeSource FindAncestor,
+                                       AncestorType={x:Type DataGrid}},UpdateSourceTrigger=PropertyChanged}"
+                                    Content="Delete" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Row="3"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     Margin="0 0 0 10">

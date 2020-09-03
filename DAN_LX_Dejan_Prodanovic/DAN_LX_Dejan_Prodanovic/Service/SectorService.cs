@@ -13,7 +13,7 @@ namespace DAN_LX_Dejan_Prodanovic.Service
         {
             try
             {
-                using (EmployeeDbEntities context = new EmployeeDbEntities())
+                using (EmployeeDbEntities1 context = new EmployeeDbEntities1())
                 {
                     tblSector newSector = new tblSector();
 
@@ -37,11 +37,33 @@ namespace DAN_LX_Dejan_Prodanovic.Service
             }
         }
 
+        public tblSector GetSectorByID(int id)
+        {
+            try
+            {
+                using (EmployeeDbEntities1 context = new EmployeeDbEntities1())
+                {
+                    tblSector sectorFromDB = (from s in context.tblSectors
+                                              where s.SectorID==id select s).First();
+
+
+                    return sectorFromDB;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception" + ex.Message.ToString());
+                return null;
+            }
+        }
+
         public tblSector GetSectorByName(string sector)
         {
             try
             {
-                using (EmployeeDbEntities context = new EmployeeDbEntities())
+                using (EmployeeDbEntities1 context = new EmployeeDbEntities1())
                 {
                     tblSector sectorFromDB = (from s in context.tblSectors where s.SectorName.Equals(sector) select s).First();
 
