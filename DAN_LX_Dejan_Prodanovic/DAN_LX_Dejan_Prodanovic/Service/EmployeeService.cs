@@ -118,7 +118,17 @@ namespace DAN_LX_Dejan_Prodanovic.Service
                                                 where e.EmployeeID == employeeID
                                                 select e).First();
 
-                    emoloyeeInDB.ManagerId = managerId;
+                    if (managerId==0)
+                    {
+                        emoloyeeInDB.ManagerId = null;
+                    }
+                    else
+                    {
+                        emoloyeeInDB.ManagerId = managerId;
+
+                    }
+
+
 
                     context.SaveChanges();
 

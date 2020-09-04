@@ -66,6 +66,8 @@
     </ApplicationDefinition>
     <Compile Include="Dto\EmployeeDto.cs" />
     <Compile Include="Dto\ManagerDto.cs" />
+    <Compile Include="EventClass.cs" />
+    <Compile Include="FileLogging.cs" />
     <Compile Include="Model\EmployeeDatabaseModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -96,6 +98,7 @@
     <Compile Include="Service\ISectorService.cs" />
     <Compile Include="Service\LocationService.cs" />
     <Compile Include="Service\SectorService.cs" />
+    <Compile Include="TextToFileEventArgs.cs" />
     <Compile Include="Utility\LocationFileActions.cs" />
     <Compile Include="Validation\ValidationClass.cs" />
     <Compile Include="ViewModel\AddEmployeeViewModel.cs" />

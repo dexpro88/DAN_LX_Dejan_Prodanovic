@@ -6,8 +6,10 @@ using DAN_LX_Dejan_Prodanovic.Utility;
 using DAN_LX_Dejan_Prodanovic.View;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -21,6 +23,9 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         ILocationService locationService;
         ISectorService sectorService;
         List<tblEmployee> employees;
+
+        private BackgroundWorker worker;
+        EventClass eventObject = new EventClass();
 
         public MainViewModel(MainWindow mainView)
         {
@@ -38,7 +43,16 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             employees = employeeService.GetEmployees();
 
             EmployeeList = ConvertToListEmployeeDto(employees);
-            //FriendList = userService.GetFriends(User);
+
+            worker = new BackgroundWorker();
+            worker.DoWork += DoWork;
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.RunWorkerCompleted += RunWorkerCompleted;
+
+            worker.RunWorkerAsync();
+
+            eventObject.ActionPerformed += ActionPerformed;
 
         }
 
@@ -132,7 +146,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                             }
                             string textForFile = String.Format("Deleted user {0} {1} JMBG {2}", SelectedEmployee.FirstName,
                                 SelectedEmployee.LastName, SelectedEmployee.JMBG);
-                            //eventObject.OnActionPerformed(textForFile);
+                            eventObject.OnActionPerformed(textForFile);
 
                             employeeService.DeleteEmployee(employeeID);
                             employees = employeeService.GetEmployees();
@@ -313,6 +327,47 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             {
                 return false;
             }
+        }
+
+        private void DoWork(object sender, DoWorkEventArgs e)
+        {
+
+
+            while (true)
+            {
+
+
+                if (!FileLogging.texToFile.Equals(""))
+                {
+                    FileLogging.LogToFile();
+                }
+                Thread.Sleep(100);
+
+
+
+
+
+                if (worker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+            }
+
+
+        }
+
+       
+        void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+
+        }
+
+        void ActionPerformed(object source, TextToFileEventArgs args)
+        {
+            FileLogging.texToFile = args.TextForFile;
         }
     }
 }

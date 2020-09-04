@@ -21,7 +21,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         IEmployeeService employeeService;
        
         ISectorService sectorService;
-        //EventClass eventObject;
+        EventClass eventObject;
         List<tblLocation> locations = new List<tblLocation>();
         List<tblEmployee> potentialManagersInDb = new List<tblEmployee>();
         private EmployeeDto oldEmployee;
@@ -29,14 +29,13 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         #region Constructor
         public EditEmployeeViewModel(EditEmployee editEmployeeOpen, EmployeeDto employeeEdit)
         {
-            //eventObject = new EventClass();
+            eventObject = new EventClass();
             editEmployee = editEmployeeOpen;
-            //ManagerDto = new EmployeeDto();
+             
             Employee = employeeEdit;
 
             selctedLocation = new LocationDto();
-            //selectedMenager = new vwMenager();
-            //selectedMenager.Menager = employee.MenagerName;
+         
             StartDate = (DateTime)employee.DateOfBirth;
             Sector = employee.SectorName;
 
@@ -65,16 +64,16 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             LocationList.OrderByDescending(x => x.Location);
             LocationList.Reverse();
 
-            if (managerToPresent!=null)
-            {
-                SelectedMenager = PotentialMenagers.Where(x=>x.ID==Employee.ManagerId).FirstOrDefault();
-            }
+            //if (managerToPresent!=null)
+            //{
+            //    SelectedMenager = PotentialMenagers.Where(x=>x.ID==Employee.ManagerId).FirstOrDefault();
+            //}
 
-          
 
-           
 
-            //eventObject.ActionPerformed += ActionPerformed;
+
+
+            eventObject.ActionPerformed += ActionPerformed;
 
             oldEmployee = new EmployeeDto();
             oldEmployee.FirstName = employee.FirstName;
@@ -228,25 +227,25 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             try
             {
 
-                //if (!ValidationClass.JMBGisValid(employee.JMBG))
-                //{
-                //    MessageBox.Show("JMBG  is not valid.");
-                //    return;
-                //}
+                if (!ValidationClass.JMBGisValid(employee.JMBG))
+                {
+                    MessageBox.Show("JMBG  is not valid.");
+                    return;
+                }
 
 
 
-                //if (!ValidationClass.RegisterNumberIsValid(employee.IDNumber))
-                //{
-                //    MessageBox.Show("Registration number  is not valid");
-                //    return;
-                //}
+                if (!ValidationClass.RegisterNumberIsValid(employee.IDNumber))
+                {
+                    MessageBox.Show("Registration number  is not valid");
+                    return;
+                }
 
-                //if (!ValidationClass.TelfonNumberValid(employee.PhoneNumber))
-                //{
-                //    MessageBox.Show("Telefon number  is not valid. It must have 9 numbers");
-                //    return;
-                //}
+                if (!ValidationClass.TelfonNumberValid(employee.PhoneNumber))
+                {
+                    MessageBox.Show("Telefon number  is not valid. It must have 9 numbers");
+                    return;
+                }
 
 
                 employee.DateOfBirth = StartDate;
@@ -295,17 +294,25 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 }
                 if (Employee.ManagerId!=null)
                 {
-                    employeeService.EditManager((int)Employee.EmployeeID, SelectedMenager.ID);
+                    if (SelectedMenager!=null)
+                    {
+                        employeeService.EditManager((int)Employee.EmployeeID, SelectedMenager.ID);
+                    }
+                    else
+                    {
+                        employeeService.EditManager((int)Employee.EmployeeID,0);
+                    }
+                   
                 }
+
+
+
+                string textForFile = String.Format("Updated user {0} {1} JMBG {2} to {3} {4} JMBG {5}", oldEmployee.FirstName,
+                              oldEmployee.LastName, oldEmployee.JMBG, employee.FirstName, employee.LastName, employee.JMBG);
+                eventObject.OnActionPerformed(textForFile);
+
+
                
-               
-
-                //string textForFile = String.Format("Updated user {0} {1} JMBG {2} to {3} {4} JMBG {5}", oldEmployee.FirstName,
-                //              oldEmployee.LastName, oldEmployee.JMBG, employee.FirstName, employee.LastName, employee.JMBG);
-                //eventObject.OnActionPerformed(textForFile);
-
-
-                //employeeService.EditEmployee(employee);
 
                 editEmployee.Close();
 
@@ -397,11 +404,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
 
         #endregion
 
-        //void ActionPerformed(object source, TextToFileEventArgs args)
-        //{
-        //    FileLogging.texToFile = args.TextForFile;
-        //}
-
+         
         List<LocationDto> ConvertLocationDtoList(List<tblLocation> locations)
         {
             List<LocationDto> locationDtos = new List<LocationDto>();
@@ -442,6 +445,11 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             managerDto.ID = manager.EmployeeID;
 
             return managerDto;
+        }
+
+        void ActionPerformed(object source, TextToFileEventArgs args)
+        {
+            FileLogging.texToFile = args.TextForFile;
         }
     }
 }
