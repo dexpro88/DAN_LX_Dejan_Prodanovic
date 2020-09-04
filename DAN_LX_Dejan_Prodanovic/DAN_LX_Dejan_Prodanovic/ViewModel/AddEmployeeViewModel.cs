@@ -21,14 +21,14 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
         IEmployeeService employeeService;
 
         ISectorService sectorService;
-        //EventClass eventObject;
+        EventClass eventObject;
         List<tblLocation> locationsInDb;
         List<tblEmployee> managersInDb;
 
         #region Constructor
         public AddEmployeeViewModel(AddEmployee addEmployeeOpen)
         {
-            //eventObject = new EventClass();
+            eventObject = new EventClass();
 
             SelectedMenager = new ManagerDto();
             
@@ -55,7 +55,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             PotentialMenagers = ConvertManagerListToDto(managersInDb);
 
 
-            //eventObject.ActionPerformed += ActionPerformed;
+            eventObject.ActionPerformed += ActionPerformed;
         }
 
 
@@ -190,33 +190,34 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             try
             {
 
-                //if (!ValidationClass.JMBGisValid(employee.JMBG))
-                //{
-                //    MessageBox.Show("JMBG  is not valid.");
-                //    return;
-                //}
+                if (!ValidationClass.JMBGisValid(employee.JMBG))
+                {
+                    MessageBox.Show("JMBG  is not valid.");
+                    return;
+                }
 
-                //if (!ValidationClass.JMBGIsUnique(employee.JMBG))
-                //{
-                //    MessageBox.Show("JMBG  already exists in database");
-                //    return;
-                //}
+                if (!ValidationClass.JMBGIsUnique(employee.JMBG))
+                {
+                    MessageBox.Show("JMBG  already exists in database");
+                    return;
+                }
 
-                //if (!ValidationClass.RegisterNumberIsValid(employee.IDNumber))
-                //{
-                //    MessageBox.Show("Registration number  is not valid. It must have 9 numbers");
-                //    return;
-                //}
-                //if (!ValidationClass.RegNumberIsUnique(employee.IDNumber))
-                //{
-                //    MessageBox.Show("Registration number  already exists in database");
-                //    return;
-                //}
-                //if (!ValidationClass.TelfonNumberValid(employee.PhoneNumber))
-                //{
-                //    MessageBox.Show("Telephone number  is not valid. It must have 9 numbers");
-                //    return;
-                //}
+                if (!ValidationClass.RegisterNumberIsValid(employee.IDNumber))
+                {
+                    MessageBox.Show("Registration number  is not valid. It must have 9 numbers");
+                    return;
+                }
+                if (!ValidationClass.RegNumberIsUnique(employee.IDNumber))
+                {
+                    MessageBox.Show("Registration number  already exists in database");
+                    return;
+                }
+                if (!ValidationClass.TelfonNumberValid(employee.PhoneNumber))
+                {
+                    MessageBox.Show("Telephone number  is not valid. It must have 9 numbers");
+                    return;
+                }
+
                 employee.LocationID = SelctedLocation.ID;
                 employee.DateOfBirth = StartDate;
 
@@ -240,11 +241,11 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 }
 
 
-                tblSector sectorDB = sectorService.GetSectorByName(Sector);             
+                tblSector sectorDB = sectorService.GetSectorByName(Sector);
 
-                //string textForFile = String.Format("Added user {0} {1} JMBG {2}", employee.FirstName,
-                //              employee.LastName, employee.JMBG);
-                //eventObject.OnActionPerformed(textForFile);
+                string textForFile = String.Format("Added user {0} {1} JMBG {2}", employee.FirstName,
+                              employee.LastName, employee.JMBG);
+                eventObject.OnActionPerformed(textForFile);
 
 
 
@@ -397,6 +398,11 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
             managerDto.ID = manager.EmployeeID;
 
             return managerDto;
+        }
+
+        void ActionPerformed(object source, TextToFileEventArgs args)
+        {
+            FileLogging.texToFile = args.TextForFile;
         }
     }
 }
