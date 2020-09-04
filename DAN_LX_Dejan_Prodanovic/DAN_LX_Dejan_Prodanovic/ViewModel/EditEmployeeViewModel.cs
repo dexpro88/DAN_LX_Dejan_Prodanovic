@@ -289,7 +289,7 @@ namespace DAN_LX_Dejan_Prodanovic.ViewModel
                 }
                 else
                 {
-
+                    //some comment
                     employeeService.EditSector(Employee.EmployeeID, sectorDB);
                 }
                 if (Employee.ManagerId!=null)
